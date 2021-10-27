@@ -1,0 +1,90 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>Index</h1>
+
+<div>
+    <h4>Return Book</h4>
+
+    <div class="row">
+        <div class="col-sm-4">
+            @using (Html.BeginForm("Save", "BookReturn", FormMethod.Post))
+            {
+                <div class="form-group">
+                    <label>IssueId </label>
+                    <input type="text" id="IssueId" name="IssueId" hidden="hidden" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Title </label>
+                    <input type="text" id="Title" name="Title" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>StudentName </label>
+                    <input type="text" id="StudentName" name="StudentName" class="form-control" required />
+                </div>
+
+
+                <div class="form-group">
+                    <label>ReturnDate </label>
+                    <input type="date" id="ReturnDate" name="ReturnDate" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Elap </label>
+                    <input type="text" id="Elap" name="Elap" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Fine </label>
+                    <input type="text" id="Fine" name="Fine" class="form-control" required />
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Save"  class="btn btn-success" required />
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div>
+    @*@Html.ActionLink("Edit", "Edit", new {  id = Model.IssueId }) |*@
+    @*<a asp-action="Index">Back to List</a>*@
+</div>
+
+@*@Scripts.Render("~/bundles/jquery")*@
+@section scripts
+{
+    <script src="C:\Users\Cloud Analogy\.nuget\packages\bootstrap\5.1.2\contentFiles\any\any\wwwroot\js\bootstrap.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/js/site.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+
+    <script>
+        getIssueId();
+        function getIssueId() {
+            $("#IssueId").keyup(function (e) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/BookReturn/GetIssueId?IssueId=' + $("#IssueId").val(),
+                    dataType: 'JSON',
+                    success: function (data) {
+                        console.log(data);
+                        $("#Title").val(data[0].title);
+                        $("#ReturnDate").val(new Date(parseInt(data[0].ReturnDate.substr(6))).toLocaleDateString());
+                        var elap = data[0].ElapsedDay;
+                        if (ela > 0) {
+                            var fine = elap * 100;
+                            $("#Elap").val(elap);
+                            $("#Fine").val(fine.toString());
+                        }
+                        else {
+                            $("#Elap").val("0");
+                            $("#Fine").val("0");
+                        }
+
+                    }
+                });
+            });
+
+        }
+    </script>
+}
